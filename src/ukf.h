@@ -10,6 +10,8 @@
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
+using namespace std;
+
 class UKF {
 public:
 
@@ -21,6 +23,9 @@ public:
 
   ///* if this is false, radar measurements will be ignored (except for init)
   bool use_radar_;
+
+	///* if this is false, prediction setp will be skipped
+	bool use_time_update_;
 
   ///* state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
   VectorXd x_;
@@ -67,6 +72,9 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
 
+	// History of NIS of LIDAR and RADAR
+	int lidar_nis_count_[2];
+	int radar_nis_count_[2];
 
   /**
    * Constructor
@@ -89,7 +97,7 @@ public:
    * matrix
    * @param delta_t Time between k and k+1 in s
    */
-  void Prediction(double delta_t);
+  void Prediction(double delta_t, const MatrixXd Xsig);
 
   /**
    * Updates the state and the state covariance matrix using a laser measurement

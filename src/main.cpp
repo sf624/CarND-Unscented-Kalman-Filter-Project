@@ -1,4 +1,8 @@
+#if defined(_WIN32)
+#include "uWebSockets-0.13.0/src/uWS.h"
+#else
 #include <uWS/uWS.h>
+#endif
 #include <iostream>
 #include "json.hpp"
 #include <math.h>
@@ -90,7 +94,7 @@ int main()
           		iss >> timestamp;
           		meas_package.timestamp_ = timestamp;
           }
-          float x_gt;
+        float x_gt;
     	  float y_gt;
     	  float vx_gt;
     	  float vy_gt;
@@ -175,7 +179,11 @@ int main()
   });
 
   int port = 4567;
+#if defined(_WIN32)
+  if (h.listen("0.0.0.0", port))
+#else
   if (h.listen(port))
+#endif
   {
     std::cout << "Listening to port " << port << std::endl;
   }
